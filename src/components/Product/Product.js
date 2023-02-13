@@ -1,7 +1,7 @@
 import styles from "./Product.module.scss";
 import PropTypes from "prop-types";
 import ProductImage from "../ProductImage/ProductImage";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProductForm from "../ProductForm/ProductForm";
 
 const Product = ({ title, basePrice, colors, sizes, name }) => {
@@ -13,9 +13,9 @@ const Product = ({ title, basePrice, colors, sizes, name }) => {
     setSelectedSize(sizes[0]);
   }, []);
 
-  const getPrice = () => {
+  const calculatedPrice = useMemo(() => {
     return selectedSize?.additionalPrice + basePrice;
-  }
+  }, [selectedSize, basePrice]);
 
   const addToCart = (event) => {
     event.preventDefault();
@@ -23,7 +23,7 @@ const Product = ({ title, basePrice, colors, sizes, name }) => {
     console.log('Summary');
     console.log('===========');
     console.log(`Name: ${title}`);
-    console.log(`Price: ${getPrice()}`);
+    console.log(`Price: ${calculatedPrice}`);
     console.log(`Size: ${selectedSize.name}`);
     console.log(`Color: ${selectedColor}`);
   }
@@ -39,7 +39,7 @@ const Product = ({ title, basePrice, colors, sizes, name }) => {
         <header>
           <h2 className={title}>{ title }</h2>
 
-          <span className={basePrice}>Price: { getPrice() }$</span>
+          <span className={basePrice}>Price: { calculatedPrice }$</span>
         </header>
         <ProductForm 
           colors={ colors }
